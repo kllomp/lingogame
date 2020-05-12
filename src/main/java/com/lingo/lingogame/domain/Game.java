@@ -53,4 +53,12 @@ public class Game {
         }
         return guesses.get(guesses.size() -1).getGuess().equals(correctWord.getWord());
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 }

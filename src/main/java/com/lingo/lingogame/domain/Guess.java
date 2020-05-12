@@ -46,4 +46,16 @@ public class Guess {
     public String getGuess() {
         return guess;
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Game getGame() {
+        return game;
+    }
 }

@@ -15,7 +15,6 @@ public class WordTest {
         assertEquals(6, w.getLength());
     }
 
-
     @Test
     @DisplayName("Length is set by setting the word")
     void lengthIsSetBySetWord() {

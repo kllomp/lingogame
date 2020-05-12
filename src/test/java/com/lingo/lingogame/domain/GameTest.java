@@ -60,4 +60,12 @@ class GameTest {
 
         assertThrows(GuessWrongSizeException.class, () -> game.addGuess(new Word("garages")));
     }
+
+    @Test
+    public void startWithNotFinished() {
+        Game game = new Game(new Word("tester"));
+        Boolean isFinished = game.isFinished();
+
+        assertEquals(false, isFinished);
+    }
 }

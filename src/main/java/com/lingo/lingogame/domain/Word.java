@@ -56,6 +56,14 @@ public class Word {
             return false;
         }
 
-        return this.length >= 5 && this.length <= 7;
+        if (this.length < 5 || this.length > 7) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public Set<Game> getGames() {
+        return games;
     }
 }
