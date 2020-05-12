@@ -1,0 +1,16 @@
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/lingogame
+    username: postgres
+    password: password
+
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+        jdbc:
+          batch_size: 4
+        order_inserts: true
+    hibernate:
+      ddl-auto: update
