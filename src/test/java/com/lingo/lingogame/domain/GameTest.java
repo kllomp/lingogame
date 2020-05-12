@@ -21,6 +21,14 @@ class GameTest {
         assertEquals(0, game.getGuesses().size());
     }
 
+    @Test
+    public void emptyGame() {
+        Game game = new Game();
+        game.setId(1l);
+
+        assertEquals(1l, game.getId());
+    }
+
     private static Stream<Arguments> provideWordsAndGuesses() {
         return Stream.of(
                 Arguments.of("garage", "garage", true, new GuessResult[]{GuessResult.CORRECT, GuessResult.CORRECT, GuessResult.CORRECT, GuessResult.CORRECT, GuessResult.CORRECT, GuessResult.CORRECT}),
