@@ -29,4 +29,4 @@ jobs:
         run: mvn -B package --file pom.xml
 
       - name: Deploy to github packages
-        run: mvn deploy -Dregistry=https://maven.pkg.github.com/maxraadgever/lingogame -Dtoken=${GITHUB_TOKEN}
+        run: mvn deploy -Dregistry=https://maven.pkg.github.com/maxraadgever/lingogame -Dtoken=${{ secrets.GITHUB_TOKEN }}
