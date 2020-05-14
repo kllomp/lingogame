@@ -1,7 +1,7 @@
 package com.lingo.lingogame.controller;
 
 import com.lingo.lingogame.domain.Word;
-import com.lingo.lingogame.repository.WordRepository;
+import com.lingo.lingogame.service.WordService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,15 +15,15 @@ import java.util.List;
 @RequestMapping(name = "words")
 public class WordController {
 
-    private final WordRepository wordRepository;
+    private final WordService wordService;
 
-    public WordController(WordRepository wordRepository) {
-        this.wordRepository = wordRepository;
+    public WordController(WordService wordService) {
+        this.wordService = wordService;
     }
 
     @PostMapping
     public ResponseEntity insertWords(@RequestBody List<Word> words) {
-        this.wordRepository.saveAll(words);
+        this.wordService.insertWords(words);
         return new ResponseEntity(words, HttpStatus.CREATED);
     }
 
