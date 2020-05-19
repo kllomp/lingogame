@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping(name = "words")
+@RequestMapping(value = "/api/words")
 public class WordController {
 
     private final WordService wordService;

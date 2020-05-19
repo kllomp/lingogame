@@ -1,12 +1,12 @@
 package com.lingo.lingogame.domain;
 
+import com.lingo.lingogame.exception.GameOverException;
 import com.lingo.lingogame.exception.GuessWrongSizeException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.util.List;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -18,26 +18,20 @@ class GameTest {
         Game game = new Game(new Word("garage"));
 
         assertNotNull(game);
-        assertEquals(0, game.getGuesses().size());
-    }
-
-    @Test
-    public void emptyGame() {
-        Game game = new Game();
-        game.setId(1l);
-
-        assertEquals(1l, game.getId());
+        assertEquals(0, game.getRounds().size());
+        assertEquals(false, game.isFinished());
+        assertEquals("g.....", game.getWordProgress());
     }
 
     private static Stream<Arguments> provideWordsAndGuesses() {
         return Stream.of(
-                Arguments.of("garage", "garage", true, new GuessResult[]{GuessResult.CORRECT, GuessResult.CORRECT, GuessResult.CORRECT, GuessResult.CORRECT, GuessResult.CORRECT, GuessResult.CORRECT}),
-                Arguments.of("abcdef", "ghijkl", false, new GuessResult[]{GuessResult.NOT_IN_WORD, GuessResult.NOT_IN_WORD, GuessResult.NOT_IN_WORD, GuessResult.NOT_IN_WORD, GuessResult.NOT_IN_WORD, GuessResult.NOT_IN_WORD}),
-                Arguments.of("garage", "garagz", false, new GuessResult[]{GuessResult.CORRECT, GuessResult.CORRECT, GuessResult.CORRECT, GuessResult.CORRECT, GuessResult.CORRECT, GuessResult.NOT_IN_WORD}),
-                Arguments.of("garage", "xxaxxx", false, new GuessResult[]{GuessResult.NOT_IN_WORD, GuessResult.NOT_IN_WORD, GuessResult.WRONG_PLACE, GuessResult.NOT_IN_WORD, GuessResult.NOT_IN_WORD, GuessResult.NOT_IN_WORD}),
-                Arguments.of("garage", "xxaxax", false, new GuessResult[]{GuessResult.NOT_IN_WORD, GuessResult.NOT_IN_WORD, GuessResult.WRONG_PLACE, GuessResult.NOT_IN_WORD, GuessResult.WRONG_PLACE, GuessResult.NOT_IN_WORD}),
-                Arguments.of("axxxx", "azzza", false, new GuessResult[]{GuessResult.CORRECT, GuessResult.NOT_IN_WORD, GuessResult.NOT_IN_WORD, GuessResult.NOT_IN_WORD, GuessResult.NOT_IN_WORD}),
-                Arguments.of("axxxx", "aazzz", false, new GuessResult[]{GuessResult.CORRECT, GuessResult.NOT_IN_WORD, GuessResult.NOT_IN_WORD, GuessResult.NOT_IN_WORD, GuessResult.NOT_IN_WORD})
+                Arguments.of("garage", "garage", true, new FeedbackType[]{FeedbackType.CORRECT, FeedbackType.CORRECT, FeedbackType.CORRECT, FeedbackType.CORRECT, FeedbackType.CORRECT, FeedbackType.CORRECT}),
+                Arguments.of("abcdef", "ghijkl", false, new FeedbackType[]{FeedbackType.NOT_IN_WORD, FeedbackType.NOT_IN_WORD, FeedbackType.NOT_IN_WORD, FeedbackType.NOT_IN_WORD, FeedbackType.NOT_IN_WORD, FeedbackType.NOT_IN_WORD}),
+                Arguments.of("garage", "garagz", false, new FeedbackType[]{FeedbackType.CORRECT, FeedbackType.CORRECT, FeedbackType.CORRECT, FeedbackType.CORRECT, FeedbackType.CORRECT, FeedbackType.NOT_IN_WORD}),
+                Arguments.of("garage", "xxaxxx", false, new FeedbackType[]{FeedbackType.NOT_IN_WORD, FeedbackType.NOT_IN_WORD, FeedbackType.WRONG_PLACE, FeedbackType.NOT_IN_WORD, FeedbackType.NOT_IN_WORD, FeedbackType.NOT_IN_WORD}),
+                Arguments.of("garage", "xxaxax", false, new FeedbackType[]{FeedbackType.NOT_IN_WORD, FeedbackType.NOT_IN_WORD, FeedbackType.WRONG_PLACE, FeedbackType.NOT_IN_WORD, FeedbackType.WRONG_PLACE, FeedbackType.NOT_IN_WORD}),
+                Arguments.of("axxxx", "azzza", false, new FeedbackType[]{FeedbackType.CORRECT, FeedbackType.NOT_IN_WORD, FeedbackType.NOT_IN_WORD, FeedbackType.NOT_IN_WORD, FeedbackType.NOT_IN_WORD}),
+                Arguments.of("axxxx", "aazzz", false, new FeedbackType[]{FeedbackType.CORRECT, FeedbackType.NOT_IN_WORD, FeedbackType.NOT_IN_WORD, FeedbackType.NOT_IN_WORD, FeedbackType.NOT_IN_WORD})
         );
     }
 
@@ -47,17 +41,18 @@ class GameTest {
             String correctWord,
             String guessWord,
             Boolean checkIsFinished,
-            GuessResult[] correctResults
-    ) throws GuessWrongSizeException {
+            FeedbackType[] correctResults
+    ) throws GuessWrongSizeException, GameOverException {
         Game game = new Game(new Word(correctWord));
 
-        List<GuessResult> result = game.addGuess(new Word(guessWord));
+        Round round = game.newRound(guessWord);
         Boolean isFinished = game.isFinished();
 
-        assertEquals(guessWord.length(), result.size());
+        assertEquals(guessWord.length(), round.getFeedbackList().size());
         assertEquals(checkIsFinished, isFinished);
-        for (int i = 0; i < result.size(); i++) {
-            assertEquals(correctResults[i], result.get(i));
+        for (int i = 0; i < round.getFeedbackList().size(); i++) {
+            Feedback fb = round.getFeedbackList().get(i);
+            assertEquals(correctResults[fb.getIndex()], round.getFeedbackList().get(i).getFeedbackType());
         }
 
     }
@@ -66,7 +61,7 @@ class GameTest {
     public void guessIsWrongSize() {
         Game game = new Game(new Word("garage"));
 
-        assertThrows(GuessWrongSizeException.class, () -> game.addGuess(new Word("garages")));
+        assertThrows(GuessWrongSizeException.class, () -> game.newRound("garages"));
     }
 
     @Test
@@ -75,5 +70,18 @@ class GameTest {
         Boolean isFinished = game.isFinished();
 
         assertEquals(false, isFinished);
+    }
+
+    @Test
+    void isFinishedWhenGivenCorrectWord() throws GuessWrongSizeException, GameOverException {
+        Game game = new Game(new Word("kaars"));
+        game.newRound("laars");
+
+        assertEquals(false, game.isFinished());
+
+        game.newRound("kaars");
+
+        assertEquals(true, game.isFinished());
+
     }
 }

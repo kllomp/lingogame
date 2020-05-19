@@ -18,6 +18,9 @@ public class WordService {
 
     public Word getRandomWord(int wordLength) {
         Random random = new Random();
+        if (wordLength == 0) {
+            wordLength = 5 + random.nextInt(3);
+        }
         List<Word> words = repository.findByLength(wordLength);
 
         return words.get(random.nextInt(words.size()));
@@ -25,5 +28,15 @@ public class WordService {
 
     public void insertWords(List<Word> words) {
         repository.saveAll(words);
+    }
+
+    public boolean isValidWord(String guessWord) {
+        Word w = new Word(guessWord);
+
+        if (!w.isValid()) {
+            return false;
+        }
+
+        return repository.findById(guessWord).isPresent();
     }
 }

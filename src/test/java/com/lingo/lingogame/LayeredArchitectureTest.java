@@ -1,5 +1,6 @@
 package com.lingo.lingogame;
 
+import com.tngtech.archunit.core.importer.ImportOption;
 import com.tngtech.archunit.junit.AnalyzeClasses;
 import com.tngtech.archunit.junit.ArchTest;
 import com.tngtech.archunit.lang.ArchRule;
@@ -7,7 +8,7 @@ import com.tngtech.archunit.lang.ArchRule;
 import static com.tngtech.archunit.library.Architectures.layeredArchitecture;
 
 
-@AnalyzeClasses(packages = "com.lingo.lingogame")
+@AnalyzeClasses(packages = "com.lingo.lingogame", importOptions = ImportOption.DoNotIncludeTests.class)
 public class LayeredArchitectureTest {
 
     @ArchTest
@@ -18,6 +19,7 @@ public class LayeredArchitectureTest {
             .layer("services").definedBy("..service..")
 
             .whereLayer("presentation").mayNotBeAccessedByAnyLayer()
-            .whereLayer("domain").mayOnlyBeAccessedByLayers("services");
+            .whereLayer("data").mayOnlyBeAccessedByLayers("services")
+            .whereLayer("domain").mayOnlyBeAccessedByLayers("presentation", "services");
 
 }

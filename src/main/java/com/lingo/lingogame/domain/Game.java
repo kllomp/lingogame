@@ -1,10 +1,16 @@
 package com.lingo.lingogame.domain;
 
+import com.lingo.lingogame.exception.GameOverException;
 import com.lingo.lingogame.exception.GuessWrongSizeException;
 import com.sun.istack.NotNull;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Entity
 public class Game {
@@ -13,45 +19,59 @@ public class Game {
     @GeneratedValue
     private Long id;
 
-
     @NotNull
     @ManyToOne(fetch = FetchType.EAGER)
     private Word correctWord;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "game")
-    private List<Guess> guesses;
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "game", cascade = CascadeType.PERSIST)
+    private Set<Round> rounds;
+    private String wordProgress;
 
     public Game(Word correctWord) {
         this.correctWord = correctWord;
-        this.guesses = new ArrayList<>();
+        this.rounds = new HashSet<>();
+        this.wordProgress = correctWord.getWord().charAt(0) +
+                IntStream.range(0, correctWord.getWord().length() - 1).mapToObj(i -> ".").collect(Collectors.joining(""));
     }
 
     public Game() {
     }
 
-    public List<Guess> getGuesses() {
-        return guesses;
-    }
-
-    public List<GuessResult> addGuess(Word w) throws GuessWrongSizeException {
-        if(w.getWord().length() != correctWord.getWord().length()) {
+    public Round newRound(String guessWord) throws GuessWrongSizeException, GameOverException {
+        if (guessWord.length() != correctWord.getWord().length()) {
             throw new GuessWrongSizeException();
         }
+        if (isFinished()) {
+            throw new GameOverException();
+        }
 
-        Guess guess = new Guess(w.getWord());
+        Round round = new Round(guessWord, correctWord.getWord());
+        round.setIndex(rounds.size());
+        round.setGame(this);
+        rounds.add(round);
 
-        List<GuessResult> result = guess.getResult(correctWord.getWord());
+        round.getFeedbackList().stream().forEach(feedback -> {
+            if (feedback.getFeedbackType() == FeedbackType.CORRECT) {
+                char[] wordProgressArray = this.wordProgress.toCharArray();
+                wordProgressArray[feedback.getIndex()] = feedback.getCharacter();
+                wordProgress = String.valueOf(wordProgressArray);
+            }
+        });
 
-        guesses.add(guess);
-
-        return result;
+        return round;
     }
 
     public Boolean isFinished() {
-        if(guesses.size() == 0) {
+        if (rounds.size() >= 5) {
+            return true;
+        }
+
+        Optional<Round> maxRound = rounds.stream().max(Comparator.comparing(Round::getIndex));
+        if (maxRound.isEmpty()) {
             return false;
         }
-        return guesses.get(guesses.size() -1).getGuess().equals(correctWord.getWord());
+
+        return maxRound.get().getGuess().equals(this.correctWord.getWord());
     }
 
     public Long getId() {
@@ -60,5 +80,13 @@ public class Game {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Set<Round> getRounds() {
+        return rounds;
+    }
+
+    public String getWordProgress() {
+        return this.wordProgress;
     }
 }
