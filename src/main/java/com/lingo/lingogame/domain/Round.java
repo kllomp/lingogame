@@ -30,16 +30,17 @@ public class Round {
     }
 
     private List<Feedback> calculateFeedback(String guess, String correct) {
+        String correct1 = correct;
         List<Feedback> result = new ArrayList<>();
 
         for (int i = 0; i < guess.length(); i++) {
             char guessChar = guess.charAt(i);
-            char correctChar = correct.charAt(i);
+            char correctChar = correct1.charAt(i);
 
-            FeedbackType feedbackType = Feedback.calculateType(guessChar, correctChar, correct);
+            FeedbackType feedbackType = Feedback.calculateType(guessChar, correctChar, correct1);
             result.add(new Feedback(i, guessChar, feedbackType, this));
 
-            correct = correct.replaceFirst(String.valueOf(guessChar), "!");
+            correct1 = correct1.replaceFirst(String.valueOf(guessChar), "!");
         }
 
         return result;

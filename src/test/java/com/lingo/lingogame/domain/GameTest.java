@@ -26,10 +26,10 @@ class GameTest {
     private static Stream<Arguments> provideWordsAndGuesses() {
         return Stream.of(
                 Arguments.of("garage", "garage", true, new FeedbackType[]{FeedbackType.CORRECT, FeedbackType.CORRECT, FeedbackType.CORRECT, FeedbackType.CORRECT, FeedbackType.CORRECT, FeedbackType.CORRECT}),
-                Arguments.of("abcdef", "ghijkl", false, new FeedbackType[]{FeedbackType.NOT_IN_WORD, FeedbackType.NOT_IN_WORD, FeedbackType.NOT_IN_WORD, FeedbackType.NOT_IN_WORD, FeedbackType.NOT_IN_WORD, FeedbackType.NOT_IN_WORD}),
+                Arguments.of("abcdef", "ahijkl", false, new FeedbackType[]{FeedbackType.CORRECT, FeedbackType.NOT_IN_WORD, FeedbackType.NOT_IN_WORD, FeedbackType.NOT_IN_WORD, FeedbackType.NOT_IN_WORD, FeedbackType.NOT_IN_WORD}),
                 Arguments.of("garage", "garagz", false, new FeedbackType[]{FeedbackType.CORRECT, FeedbackType.CORRECT, FeedbackType.CORRECT, FeedbackType.CORRECT, FeedbackType.CORRECT, FeedbackType.NOT_IN_WORD}),
-                Arguments.of("garage", "xxaxxx", false, new FeedbackType[]{FeedbackType.NOT_IN_WORD, FeedbackType.NOT_IN_WORD, FeedbackType.WRONG_PLACE, FeedbackType.NOT_IN_WORD, FeedbackType.NOT_IN_WORD, FeedbackType.NOT_IN_WORD}),
-                Arguments.of("garage", "xxaxax", false, new FeedbackType[]{FeedbackType.NOT_IN_WORD, FeedbackType.NOT_IN_WORD, FeedbackType.WRONG_PLACE, FeedbackType.NOT_IN_WORD, FeedbackType.WRONG_PLACE, FeedbackType.NOT_IN_WORD}),
+                Arguments.of("garage", "gxaxxx", false, new FeedbackType[]{FeedbackType.CORRECT, FeedbackType.NOT_IN_WORD, FeedbackType.WRONG_PLACE, FeedbackType.NOT_IN_WORD, FeedbackType.NOT_IN_WORD, FeedbackType.NOT_IN_WORD}),
+                Arguments.of("garage", "gxaxax", false, new FeedbackType[]{FeedbackType.CORRECT, FeedbackType.NOT_IN_WORD, FeedbackType.WRONG_PLACE, FeedbackType.NOT_IN_WORD, FeedbackType.WRONG_PLACE, FeedbackType.NOT_IN_WORD}),
                 Arguments.of("axxxx", "azzza", false, new FeedbackType[]{FeedbackType.CORRECT, FeedbackType.NOT_IN_WORD, FeedbackType.NOT_IN_WORD, FeedbackType.NOT_IN_WORD, FeedbackType.NOT_IN_WORD}),
                 Arguments.of("axxxx", "aazzz", false, new FeedbackType[]{FeedbackType.CORRECT, FeedbackType.NOT_IN_WORD, FeedbackType.NOT_IN_WORD, FeedbackType.NOT_IN_WORD, FeedbackType.NOT_IN_WORD})
         );

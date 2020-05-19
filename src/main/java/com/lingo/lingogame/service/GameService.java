@@ -31,7 +31,7 @@ public class GameService {
     }
 
     public Game addGuess(Game game, String guessWord) throws GuessWrongSizeException, GameOverException, InvalidPropertiesFormatException {
-        if (!wordService.isValidWord(guessWord)) {
+        if (!wordService.isValidWord(guessWord) || game.getWordProgress().charAt(0) != guessWord.charAt(0)) {
             throw new InvalidPropertiesFormatException(guessWord);
         }
 

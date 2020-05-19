@@ -35,7 +35,7 @@ class GameServiceTest {
         when(wordService.getRandomWord(6)).thenReturn(new Word("tester"));
         when(gameRepository.save(any(Game.class))).thenAnswer(invocationOnMock -> {
             Game g = invocationOnMock.getArgument(0);
-            g.setId(1l);
+            g.setId(1L);
             return g;
         });
         GameService gameService = new GameService(wordService, gameRepository, roundRepository);
@@ -54,7 +54,7 @@ class GameServiceTest {
         when(wordService.isValidWord(any())).thenReturn(true);
         when(gameRepository.save(any(Game.class))).thenAnswer(invocationOnMock -> {
             Game g = invocationOnMock.getArgument(0);
-            g.setId(1l);
+            g.setId(1L);
             return g;
         });
 
@@ -67,8 +67,7 @@ class GameServiceTest {
         assertTrue(game.isFinished());
         assertEquals(0, game.getRounds().iterator().next().getFeedbackList().stream().filter(
                 feedback -> !feedback.getFeedbackType().equals(FeedbackType.CORRECT))
-                .collect(Collectors.toList())
-                .size());
+                .count());
     }
 
     @Test
@@ -128,4 +127,23 @@ class GameServiceTest {
             gameService.addGuess(game, "test3r");
         });
     }
+
+    @Test
+    void doGuessWithInvalidStartCharacter() {
+        when(wordService.getRandomWord(6)).thenReturn(new Word("tester"));
+        when(wordService.isValidWord(any())).thenReturn(false);
+        when(gameRepository.save(any(Game.class))).thenAnswer(invocationOnMock -> {
+            Game g = invocationOnMock.getArgument(0);
+            g.setId(1l);
+            return g;
+        });
+
+        GameService gameService = new GameService(wordService, gameRepository, roundRepository);
+        Game game = gameService.startGame(6);
+
+        assertThrows(InvalidPropertiesFormatException.class, () -> {
+            gameService.addGuess(game, "pester");
+        });
+    }
+
 }
