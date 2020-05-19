@@ -129,7 +129,7 @@ class GameServiceTest {
     @Test
     void doGuessWithInvalidStartCharacter() {
         when(wordService.getRandomWord(6)).thenReturn(new Word("tester"));
-        when(wordService.isValidWord(any())).thenReturn(false);
+        when(wordService.isValidWord(any())).thenReturn(true);
         when(gameRepository.save(any(Game.class))).thenAnswer(invocationOnMock -> {
             Game g = invocationOnMock.getArgument(0);
             g.setId(1L);
