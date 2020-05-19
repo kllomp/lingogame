@@ -13,7 +13,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.InvalidPropertiesFormatException;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -76,7 +75,7 @@ class GameServiceTest {
         when(wordService.isValidWord(any())).thenReturn(true);
         when(gameRepository.save(any(Game.class))).thenAnswer(invocationOnMock -> {
             Game g = invocationOnMock.getArgument(0);
-            g.setId(1l);
+            g.setId(1L);
             return g;
         });
 
@@ -88,8 +87,7 @@ class GameServiceTest {
         assertEquals("teste.", game.getWordProgress());
         assertEquals(1, game.getRounds().iterator().next().getFeedbackList().stream().filter(
                 feedback -> !feedback.getFeedbackType().equals(FeedbackType.CORRECT))
-                .collect(Collectors.toList())
-                .size());
+                .count());
     }
 
     @Test
@@ -98,16 +96,16 @@ class GameServiceTest {
         when(wordService.isValidWord(any())).thenReturn(true);
         when(gameRepository.save(any(Game.class))).thenAnswer(invocationOnMock -> {
             Game g = invocationOnMock.getArgument(0);
-            g.setId(1l);
+            g.setId(1L);
             return g;
         });
 
         GameService gameService = new GameService(wordService, gameRepository, roundRepository);
         Game game = gameService.startGame(6);
 
-        assertThrows(GuessWrongSizeException.class, () -> {
-            gameService.addGuess(game, "testen123");
-        });
+        assertThrows(GuessWrongSizeException.class, () ->
+                gameService.addGuess(game, "testen123")
+        );
     }
 
     @Test
@@ -116,16 +114,16 @@ class GameServiceTest {
         when(wordService.isValidWord(any())).thenReturn(false);
         when(gameRepository.save(any(Game.class))).thenAnswer(invocationOnMock -> {
             Game g = invocationOnMock.getArgument(0);
-            g.setId(1l);
+            g.setId(1L);
             return g;
         });
 
         GameService gameService = new GameService(wordService, gameRepository, roundRepository);
         Game game = gameService.startGame(6);
 
-        assertThrows(InvalidPropertiesFormatException.class, () -> {
-            gameService.addGuess(game, "test3r");
-        });
+        assertThrows(InvalidPropertiesFormatException.class, () ->
+                gameService.addGuess(game, "test3r")
+        );
     }
 
     @Test
@@ -134,16 +132,16 @@ class GameServiceTest {
         when(wordService.isValidWord(any())).thenReturn(false);
         when(gameRepository.save(any(Game.class))).thenAnswer(invocationOnMock -> {
             Game g = invocationOnMock.getArgument(0);
-            g.setId(1l);
+            g.setId(1L);
             return g;
         });
 
         GameService gameService = new GameService(wordService, gameRepository, roundRepository);
         Game game = gameService.startGame(6);
 
-        assertThrows(InvalidPropertiesFormatException.class, () -> {
-            gameService.addGuess(game, "pester");
-        });
+        assertThrows(InvalidPropertiesFormatException.class, () ->
+                gameService.addGuess(game, "pester")
+        );
     }
 
 }
