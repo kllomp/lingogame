@@ -11,12 +11,6 @@ public class RoundDTO {
     private String guess;
     private List<FeedbackDTO> feedbackList;
 
-    public RoundDTO(int index, String guess, List<FeedbackDTO> feedbackList) {
-        this.index = index;
-        this.guess = guess;
-        this.feedbackList = feedbackList;
-    }
-
     public RoundDTO(Round round) {
         this.index = round.getIndex();
         this.guess = round.getGuess();

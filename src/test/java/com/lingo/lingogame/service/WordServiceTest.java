@@ -9,8 +9,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.*;
 
@@ -32,6 +33,40 @@ class WordServiceTest {
         Word result = wordService.getRandomWord(5);
 
         assertEquals(5, result.getLength());
+    }
+
+    @Test
+    void getRandomWordWithoutSpecifyingLength() {
+        List<Word> words = new ArrayList<>();
+        words.add(new Word("kaart"));
+        words.add(new Word("kaart1"));
+        words.add(new Word("wagen12"));
+        when(repository.findByLength(anyInt())).thenReturn(words);
+
+        WordService wordService = new WordService(repository);
+        Word result = wordService.getRandomWord(0);
+
+        assertEquals(true, result.getLength() >= 5);
+        assertEquals(true, result.getLength() <= 7);
+    }
+
+    @Test
+    void validWord() {
+        String wordId = "abcde";
+        when(repository.findById(wordId)).thenReturn(Optional.of(new Word(wordId)));
+
+        WordService wordService = new WordService(repository);
+
+        assertTrue(wordService.isValidWord(wordId));
+    }
+
+    @Test
+    void validWordIllegalCharacter() {
+        String wordId = "abcd3";
+
+        WordService wordService = new WordService(repository);
+
+        assertFalse(wordService.isValidWord(wordId));
     }
 
     @Test

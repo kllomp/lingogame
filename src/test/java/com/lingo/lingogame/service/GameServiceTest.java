@@ -15,8 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.InvalidPropertiesFormatException;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -92,5 +91,41 @@ class GameServiceTest {
                 feedback -> !feedback.getFeedbackType().equals(FeedbackType.CORRECT))
                 .collect(Collectors.toList())
                 .size());
+    }
+
+    @Test
+    void doInvalidGuessTooLong() {
+        when(wordService.getRandomWord(6)).thenReturn(new Word("tester"));
+        when(wordService.isValidWord(any())).thenReturn(true);
+        when(gameRepository.save(any(Game.class))).thenAnswer(invocationOnMock -> {
+            Game g = invocationOnMock.getArgument(0);
+            g.setId(1l);
+            return g;
+        });
+
+        GameService gameService = new GameService(wordService, gameRepository, roundRepository);
+        Game game = gameService.startGame(6);
+
+        assertThrows(GuessWrongSizeException.class, () -> {
+            gameService.addGuess(game, "testen123");
+        });
+    }
+
+    @Test
+    void doInvalidGuess() {
+        when(wordService.getRandomWord(6)).thenReturn(new Word("tester"));
+        when(wordService.isValidWord(any())).thenReturn(false);
+        when(gameRepository.save(any(Game.class))).thenAnswer(invocationOnMock -> {
+            Game g = invocationOnMock.getArgument(0);
+            g.setId(1l);
+            return g;
+        });
+
+        GameService gameService = new GameService(wordService, gameRepository, roundRepository);
+        Game game = gameService.startGame(6);
+
+        assertThrows(InvalidPropertiesFormatException.class, () -> {
+            gameService.addGuess(game, "test3r");
+        });
     }
 }

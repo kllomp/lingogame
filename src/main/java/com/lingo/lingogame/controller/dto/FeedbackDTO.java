@@ -9,12 +9,6 @@ public class FeedbackDTO {
     private char character;
     private FeedbackType feedbackType;
 
-    public FeedbackDTO(int index, char character, FeedbackType feedbackType) {
-        this.index = index;
-        this.character = character;
-        this.feedbackType = feedbackType;
-    }
-
     public FeedbackDTO(Feedback feedback) {
         this.index = feedback.getIndex();
         this.character = feedback.getCharacter();

@@ -103,6 +103,7 @@
                         <configuration>
                             <excludes>
                                 <exclude>**/LingogameApplication*</exclude>
+                                <exclude>**/exception/**</exclude>
                             </excludes>
                             <rules>
                                 <rule>
