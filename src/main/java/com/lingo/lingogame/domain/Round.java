@@ -36,15 +36,10 @@ public class Round {
             char guessChar = guess.charAt(i);
             char correctChar = correct.charAt(i);
 
-            if (guessChar == correctChar) {
-                result.add(new Feedback(i, guessChar, FeedbackType.CORRECT, this));
-                correct = correct.replaceFirst(String.valueOf(guessChar), "!");
-            } else if (correct.indexOf(guessChar) > -1) {
-                result.add(new Feedback(i, guessChar, FeedbackType.WRONG_PLACE, this));
-                correct = correct.replaceFirst(String.valueOf(guessChar), "!");
-            } else {
-                result.add(new Feedback(i, guessChar, FeedbackType.NOT_IN_WORD, this));
-            }
+            FeedbackType feedbackType = Feedback.calculateType(guessChar, correctChar, correct);
+            result.add(new Feedback(i, guessChar, feedbackType, this));
+
+            correct = correct.replaceFirst(String.valueOf(guessChar), "!");
         }
 
         return result;

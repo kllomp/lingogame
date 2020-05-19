@@ -26,6 +26,15 @@ public class Feedback {
         this.round = round;
     }
 
+    public static FeedbackType calculateType(char guessChar, char correctChar, String fullCorrect) {
+        if (guessChar == correctChar) {
+            return FeedbackType.CORRECT;
+        } else if (fullCorrect.indexOf(guessChar) > -1) {
+            return FeedbackType.WRONG_PLACE;
+        }
+        return FeedbackType.NOT_IN_WORD;
+    }
+
     public long getId() {
         return id;
     }
