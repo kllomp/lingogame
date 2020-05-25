@@ -6,6 +6,12 @@ spring:
     url: jdbc:postgresql://localhost:5432/lingogame
     username: postgres
     password: password
+    driverClassName: org.postgresql.Driver
+    maxActive: 10
+    maxIdle: 5
+    minIdle: 2
+    initialSize: 5
+    removeAbandoned: true
 
   jpa:
     properties:
@@ -16,3 +22,5 @@ spring:
         order_inserts: true
     hibernate:
       ddl-auto: update
+
+

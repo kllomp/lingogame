@@ -104,6 +104,7 @@
                             <excludes>
                                 <exclude>**/LingogameApplication*</exclude>
                                 <exclude>**/exception/**</exclude>
+                                <exclude>**/config/DatabaseConfig*</exclude>
                             </excludes>
                             <rules>
                                 <rule>
