@@ -132,6 +132,22 @@
                 <artifactId>maven-pmd-plugin</artifactId>
                 <version>3.13.0</version>
             </plugin>
+            <plugin>
+                <groupId>com.anthemengineering.mojo</groupId>
+                <artifactId>infer-maven-plugin</artifactId>
+                <configuration>
+                    <consoleOut>false</consoleOut>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>verify</phase>
+                        <id>infer</id>
+                        <goals>
+                            <goal>infer</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
     <distributionManagement>
