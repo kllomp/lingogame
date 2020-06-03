@@ -4,6 +4,7 @@ import com.lingo.lingogame.domain.Game;
 import com.lingo.lingogame.domain.Round;
 import com.lingo.lingogame.exception.GameOverException;
 import com.lingo.lingogame.exception.GuessWrongSizeException;
+import com.lingo.lingogame.exception.TimesUpException;
 import com.lingo.lingogame.repository.GameRepository;
 import com.lingo.lingogame.repository.RoundRepository;
 import org.springframework.stereotype.Service;
@@ -30,7 +31,7 @@ public class GameService {
         return game;
     }
 
-    public Game addGuess(Game game, String guessWord) throws GuessWrongSizeException, GameOverException, InvalidPropertiesFormatException {
+    public Game addGuess(Game game, String guessWord) throws GuessWrongSizeException, GameOverException, InvalidPropertiesFormatException, TimesUpException {
         if (!wordService.isValidWord(guessWord) || game.getWordProgress().charAt(0) != guessWord.charAt(0)) {
             throw new InvalidPropertiesFormatException(guessWord);
         }

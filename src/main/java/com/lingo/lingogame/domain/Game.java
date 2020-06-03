@@ -2,9 +2,12 @@ package com.lingo.lingogame.domain;
 
 import com.lingo.lingogame.exception.GameOverException;
 import com.lingo.lingogame.exception.GuessWrongSizeException;
+import com.lingo.lingogame.exception.TimesUpException;
 import com.sun.istack.NotNull;
+import org.apache.tomcat.jni.Local;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Optional;
@@ -27,6 +30,8 @@ public class Game {
     private Set<Round> rounds;
     private String wordProgress;
 
+    private LocalDateTime lastGuess;
+
     public Game(Word correctWord) {
         this.correctWord = correctWord;
         this.rounds = new HashSet<>();
@@ -37,9 +42,14 @@ public class Game {
     public Game() {
     }
 
-    public Round newRound(String guessWord) throws GuessWrongSizeException, GameOverException {
+    public Round newRound(String guessWord) throws GuessWrongSizeException, GameOverException, TimesUpException {
         if (guessWord.length() != correctWord.getWord().length()) {
             throw new GuessWrongSizeException();
+        }
+        LocalDateTime now = LocalDateTime.now();
+
+        if(lastGuess != null && lastGuess.compareTo(now.minusSeconds(10)) < 0) {
+            throw new TimesUpException();
         }
         if (isFinished()) {
             throw new GameOverException();
@@ -57,6 +67,8 @@ public class Game {
                 wordProgress = String.valueOf(wordProgressArray);
             }
         });
+
+        lastGuess = LocalDateTime.now();
 
         return round;
     }

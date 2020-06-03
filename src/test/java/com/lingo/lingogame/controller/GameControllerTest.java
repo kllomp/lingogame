@@ -8,6 +8,7 @@ import com.lingo.lingogame.domain.Game;
 import com.lingo.lingogame.domain.Word;
 import com.lingo.lingogame.exception.GameOverException;
 import com.lingo.lingogame.exception.GuessWrongSizeException;
+import com.lingo.lingogame.exception.TimesUpException;
 import com.lingo.lingogame.repository.GameRepository;
 import com.lingo.lingogame.repository.RoundRepository;
 import com.lingo.lingogame.service.GameService;
@@ -55,7 +56,7 @@ class GameControllerTest {
     }
 
     @Test
-    void doGuess() throws GuessWrongSizeException, GameOverException, InvalidPropertiesFormatException {
+    void doGuess() throws GuessWrongSizeException, GameOverException, InvalidPropertiesFormatException, TimesUpException {
         Game g = new Game(new Word("tester"));
         g.setId(1l);
         when(gameRepository.getOne(any())).thenReturn(g);

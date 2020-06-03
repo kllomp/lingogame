@@ -2,11 +2,13 @@ package com.lingo.lingogame.domain;
 
 import com.lingo.lingogame.exception.GameOverException;
 import com.lingo.lingogame.exception.GuessWrongSizeException;
+import com.lingo.lingogame.exception.TimesUpException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -42,7 +44,7 @@ class GameTest {
             String guessWord,
             Boolean checkIsFinished,
             FeedbackType[] correctResults
-    ) throws GuessWrongSizeException, GameOverException {
+    ) throws GuessWrongSizeException, GameOverException, TimesUpException {
         Game game = new Game(new Word(correctWord));
 
         Round round = game.newRound(guessWord);
@@ -73,7 +75,7 @@ class GameTest {
     }
 
     @Test
-    void isFinishedWhenGivenCorrectWord() throws GuessWrongSizeException, GameOverException {
+    void isFinishedWhenGivenCorrectWord() throws GuessWrongSizeException, GameOverException, TimesUpException {
         Game game = new Game(new Word("kaars"));
         game.newRound("laars");
 
@@ -82,6 +84,17 @@ class GameTest {
         game.newRound("kaars");
 
         assertEquals(true, game.isFinished());
+
+    }
+
+    @Test
+    void doSlowGuess() throws InterruptedException, TimesUpException, GuessWrongSizeException, GameOverException {
+        Game game = new Game(new Word("kaart"));
+        game.newRound("kaars");
+
+        TimeUnit.SECONDS.sleep(11);
+
+        assertThrows(TimesUpException.class, () -> game.newRound("kerel"));
 
     }
 }

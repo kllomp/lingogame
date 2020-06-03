@@ -5,6 +5,7 @@ import com.lingo.lingogame.domain.Game;
 import com.lingo.lingogame.domain.Word;
 import com.lingo.lingogame.exception.GameOverException;
 import com.lingo.lingogame.exception.GuessWrongSizeException;
+import com.lingo.lingogame.exception.TimesUpException;
 import com.lingo.lingogame.repository.GameRepository;
 import com.lingo.lingogame.repository.RoundRepository;
 import org.junit.jupiter.api.Test;
@@ -48,7 +49,7 @@ class GameServiceTest {
     }
 
     @Test
-    void doCorrectGuess() throws GuessWrongSizeException, GameOverException, InvalidPropertiesFormatException {
+    void doCorrectGuess() throws GuessWrongSizeException, GameOverException, InvalidPropertiesFormatException, TimesUpException {
         when(wordService.getRandomWord(6)).thenReturn(new Word("tester"));
         when(wordService.isValidWord(any())).thenReturn(true);
         when(gameRepository.save(any(Game.class))).thenAnswer(invocationOnMock -> {
@@ -70,7 +71,7 @@ class GameServiceTest {
     }
 
     @Test
-    void doPartialCorrectGuess() throws InvalidPropertiesFormatException, GuessWrongSizeException, GameOverException {
+    void doPartialCorrectGuess() throws InvalidPropertiesFormatException, GuessWrongSizeException, GameOverException, TimesUpException {
         when(wordService.getRandomWord(6)).thenReturn(new Word("tester"));
         when(wordService.isValidWord(any())).thenReturn(true);
         when(gameRepository.save(any(Game.class))).thenAnswer(invocationOnMock -> {
