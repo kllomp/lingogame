@@ -43,17 +43,19 @@ public class Game {
     }
 
     public Round newRound(String guessWord, LocalDateTime guessedAt)  throws GuessWrongSizeException, GameOverException, TimesUpException {
-        if (guessWord.length() != correctWord.getWord().length()) {
-            throw new GuessWrongSizeException();
+        if (isFinished()) {
+            throw new GameOverException();
         }
         LocalDateTime now = LocalDateTime.now();
 
         if(lastGuess != null && lastGuess.compareTo(now.minusSeconds(10)) < 0) {
             throw new TimesUpException();
         }
-        if (isFinished()) {
-            throw new GameOverException();
+        if (guessWord.length() != correctWord.getWord().length()) {
+            throw new GuessWrongSizeException();
         }
+
+
 
         Round round = new Round(guessWord, correctWord.getWord());
         round.setIndex(rounds.size());
