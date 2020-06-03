@@ -42,7 +42,7 @@ public class Game {
     public Game() {
     }
 
-    public Round newRound(String guessWord) throws GuessWrongSizeException, GameOverException, TimesUpException {
+    public Round newRound(String guessWord, LocalDateTime guessedAt)  throws GuessWrongSizeException, GameOverException, TimesUpException {
         if (guessWord.length() != correctWord.getWord().length()) {
             throw new GuessWrongSizeException();
         }
@@ -68,9 +68,13 @@ public class Game {
             }
         });
 
-        lastGuess = LocalDateTime.now();
+        lastGuess = guessedAt;
 
         return round;
+    }
+
+    public Round newRound(String guessWord) throws GuessWrongSizeException, GameOverException, TimesUpException {
+        return this.newRound(guessWord, LocalDateTime.now());
     }
 
     public Boolean isFinished() {

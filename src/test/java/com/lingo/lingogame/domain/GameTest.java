@@ -8,6 +8,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.time.LocalDateTime;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
@@ -90,9 +91,7 @@ class GameTest {
     @Test
     void doSlowGuess() throws InterruptedException, TimesUpException, GuessWrongSizeException, GameOverException {
         Game game = new Game(new Word("kaart"));
-        game.newRound("kaars");
-
-        TimeUnit.SECONDS.sleep(11);
+        game.newRound("kaars", LocalDateTime.now().minusSeconds(11));
 
         assertThrows(TimesUpException.class, () -> game.newRound("kerel"));
 
