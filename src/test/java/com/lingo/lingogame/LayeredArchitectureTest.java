@@ -19,7 +19,7 @@ public class LayeredArchitectureTest {
             .layer("services").definedBy("..service..")
 
             .whereLayer("presentation").mayNotBeAccessedByAnyLayer()
+            .whereLayer("services").mayOnlyBeAccessedByLayers("presentation")
             .whereLayer("data").mayOnlyBeAccessedByLayers("services")
-            .whereLayer("domain").mayOnlyBeAccessedByLayers("presentation", "services");
-
+            .whereLayer("domain").mayOnlyBeAccessedByLayers("services");
 }

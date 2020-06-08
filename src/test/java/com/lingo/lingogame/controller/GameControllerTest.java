@@ -28,29 +28,20 @@ import static org.mockito.Mockito.*;
 class GameControllerTest {
 
     @Mock
-    private WordService wordService;
-
-    @Mock
-    private GameRepository gameRepository;
-
-    @Mock
-    private RoundRepository roundRepository;
+    private GameService gameService;
 
     @Test
     void startGame() {
         Game g = new Game(new Word("tester"));
-        g.setId(0l);
-        when(gameRepository.save(any(Game.class))).thenReturn(g);
-        when(wordService.getRandomWord(anyInt())).thenReturn(new Word("tester"));
+        g.setId(0L);
+        when(gameService.startGame(anyInt())).thenReturn(g);
 
         // start game, given length
-        GameController controller = new GameController(new GameService(wordService, gameRepository, roundRepository));
+        GameController controller = new GameController(gameService);
         GameStateDTO gameStateDTO = controller.startGame(5);
 
-        verify(wordService, times(1)).getRandomWord(5);
-        verify(gameRepository, times(1)).save(any(Game.class));
+        verify(gameService, times(1)).startGame(5);
 
-        assertNotNull(gameStateDTO.getGameId());
         assertEquals(0, gameStateDTO.getRounds().size());
         assertFalse(gameStateDTO.isFinished());
     }
@@ -58,21 +49,14 @@ class GameControllerTest {
     @Test
     void doGuess() throws GuessWrongSizeException, GameOverException, InvalidPropertiesFormatException, TimesUpException {
         Game g = new Game(new Word("tester"));
-        g.setId(1l);
-        when(gameRepository.getOne(any())).thenReturn(g);
-        when(wordService.isValidWord(anyString())).thenReturn(true);
+        g.setId(1L);
+        when(gameService.getGameById(anyLong())).thenReturn(g);
+        when(gameService.addGuess(any(), any())).thenReturn(g);
 
-        GameController controller = new GameController(new GameService(wordService, gameRepository, roundRepository));
+        GameController controller = new GameController(gameService);
         GameStateDTO gameStateDTO = controller.doGuess(new GuessDTO(1, "tester"));
 
+        verify(gameService, times(1)).addGuess(any(Game.class), anyString());
         assertNotNull(gameStateDTO);
-        assertEquals(1, gameStateDTO.getRounds().size());
-        assertTrue(gameStateDTO.isFinished());
-        assertEquals("tester", gameStateDTO.getRounds().get(0).getGuess());
-
-        RoundDTO roundDto = gameStateDTO.getRounds().get(0);
-        roundDto.getFeedbackList().stream().forEach(feedbackDTO -> {
-            assertEquals(FeedbackType.CORRECT, feedbackDTO.getFeedbackType());
-        });
     }
 }

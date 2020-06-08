@@ -31,8 +31,8 @@ public class GameController {
 
     @PostMapping("/guess")
     public GameStateDTO doGuess(@RequestBody GuessDTO guessDTO) throws GuessWrongSizeException, GameOverException, InvalidPropertiesFormatException, TimesUpException {
-        Game g = gameService.getGameById(Long.valueOf(guessDTO.getGameId()));
-        gameService.addGuess(g, guessDTO.getGuess());
+        Game g = gameService.getGameById((long) guessDTO.getGameId());
+        g = gameService.addGuess(g, guessDTO.getGuess());
         return new GameStateDTO(g);
     }
 }
