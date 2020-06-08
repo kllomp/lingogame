@@ -1,17 +1,15 @@
 package com.lingo.lingogame.controller;
 
-import com.lingo.lingogame.service.dto.GameStateDTO;
-import com.lingo.lingogame.service.dto.GuessDTO;
-import com.lingo.lingogame.service.dto.RoundDTO;
 import com.lingo.lingogame.domain.Game;
 import com.lingo.lingogame.exception.GameOverException;
 import com.lingo.lingogame.exception.GuessWrongSizeException;
 import com.lingo.lingogame.exception.TimesUpException;
 import com.lingo.lingogame.service.GameService;
+import com.lingo.lingogame.service.dto.GameStateDTO;
+import com.lingo.lingogame.service.dto.GuessDTO;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.InvalidPropertiesFormatException;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/api/game")
