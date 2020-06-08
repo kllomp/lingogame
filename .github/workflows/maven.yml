@@ -25,6 +25,8 @@ jobs:
         run: mvn pmd:check
       - name: Check code coverage
         run: mvn verify
+      - name: Check mutation tests
+        run: mvn pitest:mutationCoverage
       - name: Build with Maven
         run: mvn -B package --file pom.xml
       - name: Deploy to github packages
