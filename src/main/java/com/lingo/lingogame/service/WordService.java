@@ -33,10 +33,6 @@ public class WordService {
     public boolean isValidWord(String guessWord) {
         Word w = new Word(guessWord);
 
-        if (!w.isValid()) {
-            return false;
-        }
-
-        return repository.findById(guessWord).isPresent();
+        return w.isValid() && repository.findById(guessWord).isPresent();
     }
 }

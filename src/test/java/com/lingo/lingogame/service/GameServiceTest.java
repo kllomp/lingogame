@@ -145,4 +145,16 @@ class GameServiceTest {
         );
     }
 
+    @Test
+    void getGameById() {
+        Game returnedGame = new Game();
+        when(gameRepository.getOne(anyLong())).thenReturn(returnedGame);
+
+        GameService gameService = new GameService(wordService, gameRepository, roundRepository);
+        Game game = gameService.getGameById(1L);
+
+        assertNotNull(game);
+        assertEquals(returnedGame, game);
+    }
+
 }

@@ -22,9 +22,9 @@ public class WordController {
     }
 
     @PostMapping
-    public ResponseEntity insertWords(@RequestBody List<Word> words) {
+    public ResponseEntity<List<Word>> insertWords(@RequestBody List<Word> words) {
         this.wordService.insertWords(words);
-        return new ResponseEntity(words, HttpStatus.CREATED);
+        return new ResponseEntity<>(words, HttpStatus.CREATED);
     }
 
 }

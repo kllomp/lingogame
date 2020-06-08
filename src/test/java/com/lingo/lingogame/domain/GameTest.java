@@ -9,7 +9,6 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.time.LocalDateTime;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -53,6 +52,8 @@ class GameTest {
 
         assertEquals(guessWord.length(), round.getFeedbackList().size());
         assertEquals(checkIsFinished, isFinished);
+        assertEquals(round.getGame(), game);
+
         for (int i = 0; i < round.getFeedbackList().size(); i++) {
             Feedback fb = round.getFeedbackList().get(i);
             assertEquals(correctResults[fb.getIndex()], round.getFeedbackList().get(i).getFeedbackType());
@@ -78,22 +79,50 @@ class GameTest {
     @Test
     void isFinishedWhenGivenCorrectWord() throws GuessWrongSizeException, GameOverException, TimesUpException {
         Game game = new Game(new Word("kaars"));
-        game.newRound("laars");
+        Round round1 = game.newRound("laars");
 
         assertEquals(false, game.isFinished());
+        assertEquals(0, round1.getIndex());
 
-        game.newRound("kaars");
+        Round round2 = game.newRound("kaars");
 
         assertEquals(true, game.isFinished());
+        assertEquals(1, round2.getIndex());
 
     }
 
     @Test
-    void doSlowGuess() throws InterruptedException, TimesUpException, GuessWrongSizeException, GameOverException {
+    void doMoreGuessesThenAllowed() throws TimesUpException, GuessWrongSizeException, GameOverException {
+        Game game = new Game(new Word("kaars"));
+        game.newRound("laars");
+        game.newRound("laars");
+        game.newRound("laars");
+        game.newRound("laars");
+
+        assertEquals(false, game.isFinished());
+
+        game.newRound("laars");
+
+        assertEquals(true, game.isFinished());
+    }
+
+    @Test
+    void doSlowGuess() throws TimesUpException, GuessWrongSizeException, GameOverException {
         Game game = new Game(new Word("kaart"));
         game.newRound("kaars", LocalDateTime.now().minusSeconds(11));
 
         assertThrows(TimesUpException.class, () -> game.newRound("kerel"));
 
+    }
+
+    @Test
+    void doJustInTimeGuess() throws TimesUpException, GuessWrongSizeException, GameOverException {
+        Game game = new Game(new Word("kaart"));
+        game.newRound("kaars", LocalDateTime.now().minusSeconds(9));
+
+        Round round = game.newRound("kerel");
+
+        assertNotNull(round);
+        assertEquals("kerel", round.getGuess());
     }
 }

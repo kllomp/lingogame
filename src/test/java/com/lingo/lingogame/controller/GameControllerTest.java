@@ -1,13 +1,13 @@
 package com.lingo.lingogame.controller;
 
-import com.lingo.lingogame.service.dto.GameStateDTO;
-import com.lingo.lingogame.service.dto.GuessDTO;
 import com.lingo.lingogame.domain.Game;
 import com.lingo.lingogame.domain.Word;
 import com.lingo.lingogame.exception.GameOverException;
 import com.lingo.lingogame.exception.GuessWrongSizeException;
 import com.lingo.lingogame.exception.TimesUpException;
 import com.lingo.lingogame.service.GameService;
+import com.lingo.lingogame.service.dto.GameStateDTO;
+import com.lingo.lingogame.service.dto.GuessDTO;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -37,6 +37,7 @@ class GameControllerTest {
 
         verify(gameService, times(1)).startGame(5);
 
+        assertNotNull(gameStateDTO);
         assertEquals(0, gameStateDTO.getRounds().size());
         assertFalse(gameStateDTO.isFinished());
     }

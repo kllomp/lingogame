@@ -46,8 +46,8 @@ class WordServiceTest {
         WordService wordService = new WordService(repository);
         Word result = wordService.getRandomWord(0);
 
-        assertEquals(true, result.getLength() >= 5);
-        assertEquals(true, result.getLength() <= 7);
+        assertTrue(result.getLength() >= 5);
+        assertTrue(result.getLength() <= 7);
     }
 
     @Test
@@ -58,6 +58,16 @@ class WordServiceTest {
         WordService wordService = new WordService(repository);
 
         assertTrue(wordService.isValidWord(wordId));
+    }
+
+    @Test
+    void validWordButNotInRepository() {
+        String wordId = "abcde";
+        when(repository.findById(wordId)).thenReturn(Optional.empty());
+
+        WordService wordService = new WordService(repository);
+
+        assertFalse(wordService.isValidWord(wordId));
     }
 
     @Test
