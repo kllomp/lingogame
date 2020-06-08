@@ -1,4 +1,4 @@
-package com.lingo.lingogame.controller.dto;
+package com.lingo.lingogame.service.dto;
 
 import com.lingo.lingogame.domain.Game;
 
@@ -13,10 +13,10 @@ public class GameStateDTO {
     private List<RoundDTO> rounds;
 
     public GameStateDTO(Game game) {
-        gameId = game.getId();
-        isFinished = game.isFinished();
-        progress = game.getWordProgress();
-        rounds = game.getRounds().stream().map(RoundDTO::new).collect(Collectors.toList());
+        this.gameId = game.getId();
+        this.isFinished = game.isFinished();
+        this.progress = game.getWordProgress();
+        this.rounds = game.getRounds().stream().map(RoundDTO::new).collect(Collectors.toList());
     }
 
     public long getGameId() {

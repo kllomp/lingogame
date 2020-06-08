@@ -1,7 +1,8 @@
 package com.lingo.lingogame.controller;
 
-import com.lingo.lingogame.controller.dto.GameStateDTO;
-import com.lingo.lingogame.controller.dto.GuessDTO;
+import com.lingo.lingogame.service.dto.GameStateDTO;
+import com.lingo.lingogame.service.dto.GuessDTO;
+import com.lingo.lingogame.service.dto.RoundDTO;
 import com.lingo.lingogame.domain.Game;
 import com.lingo.lingogame.exception.GameOverException;
 import com.lingo.lingogame.exception.GuessWrongSizeException;
@@ -10,6 +11,7 @@ import com.lingo.lingogame.service.GameService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.InvalidPropertiesFormatException;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/api/game")
@@ -31,8 +33,8 @@ public class GameController {
 
     @PostMapping("/guess")
     public GameStateDTO doGuess(@RequestBody GuessDTO guessDTO) throws GuessWrongSizeException, GameOverException, InvalidPropertiesFormatException, TimesUpException {
-        Game g = gameService.getGameById((long) guessDTO.getGameId());
-        g = gameService.addGuess(g, guessDTO.getGuess());
-        return new GameStateDTO(g);
+        Game game = gameService.getGameById((long) guessDTO.getGameId());
+        game = gameService.addGuess(game, guessDTO.getGuess());
+        return new GameStateDTO(game);
     }
 }

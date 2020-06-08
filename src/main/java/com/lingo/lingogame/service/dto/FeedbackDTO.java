@@ -1,4 +1,4 @@
-package com.lingo.lingogame.controller.dto;
+package com.lingo.lingogame.service.dto;
 
 import com.lingo.lingogame.domain.Feedback;
 import com.lingo.lingogame.domain.FeedbackType;

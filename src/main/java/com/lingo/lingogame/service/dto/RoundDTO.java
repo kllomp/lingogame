@@ -1,4 +1,4 @@
-package com.lingo.lingogame.controller.dto;
+package com.lingo.lingogame.service.dto;
 
 import com.lingo.lingogame.domain.Round;
 
@@ -14,7 +14,7 @@ public class RoundDTO {
     public RoundDTO(Round round) {
         this.index = round.getIndex();
         this.guess = round.getGuess();
-        this.feedbackList = round.getFeedbackList().stream().map(feedback -> new FeedbackDTO(feedback)).collect(Collectors.toList());
+        this.feedbackList = round.getFeedbackList().stream().map(FeedbackDTO::new).collect(Collectors.toList());
     }
 
     public int getIndex() {

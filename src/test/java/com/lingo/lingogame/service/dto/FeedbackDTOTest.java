@@ -1,7 +1,8 @@
-package com.lingo.lingogame.controller.dto;
+package com.lingo.lingogame.service.dto;
 
 import com.lingo.lingogame.domain.Feedback;
 import com.lingo.lingogame.domain.FeedbackType;
+import com.lingo.lingogame.domain.Game;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
