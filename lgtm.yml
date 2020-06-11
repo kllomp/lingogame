@@ -21,7 +21,7 @@
     #        Use ** to indicate an arbitrary parent path.
     #        Use * to indicate any sequence of characters excluding /.
     #        Always enclose the expression in double quotes if it includes *.
-    - "**/*.test"
+#    - "**/*.test"
     # Refine the classifications above by excluding files in test/util/.
 #    - exclude: test/util
   # The default behavior is to tag all files created during the
