@@ -113,7 +113,7 @@ extraction:
     # The `index` step extracts information from the files in the codebase.
     index:
 
-      java_version: 11
+      java_version: 14
       # Specify whether to extract Java .properties files
       # Default: false
 #      properties_files: true
