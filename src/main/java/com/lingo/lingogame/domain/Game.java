@@ -31,6 +31,11 @@ public class Game {
 
     private LocalDateTime lastGuess;
 
+
+
+    @OneToOne(mappedBy = "game")
+    private HighScore highScore;
+
     public Game(Word correctWord) {
         this.correctWord = correctWord;
         this.rounds = new HashSet<>();
@@ -53,8 +58,6 @@ public class Game {
         if (guessWord.length() != correctWord.getWord().length()) {
             throw new GuessWrongSizeException();
         }
-
-
 
         Round round = new Round(guessWord, correctWord.getWord());
         round.setIndex(rounds.size());
@@ -105,5 +108,17 @@ public class Game {
 
     public String getWordProgress() {
         return this.wordProgress;
+    }
+
+    public boolean isWon() {
+        return this.wordProgress.equals(this.correctWord.getWord());
+    }
+
+    public HighScore getHighScore() {
+        return this.highScore;
+    }
+
+    public void setHighScore(HighScore highScore) {
+        this.highScore = highScore;
     }
 }

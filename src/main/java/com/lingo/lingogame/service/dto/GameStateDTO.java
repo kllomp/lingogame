@@ -9,6 +9,7 @@ public class GameStateDTO {
 
     private long gameId;
     private boolean isFinished;
+    private boolean isWon;
     private String progress;
     private List<RoundDTO> rounds;
 
@@ -16,6 +17,7 @@ public class GameStateDTO {
         this.gameId = game.getId();
         this.isFinished = game.isFinished();
         this.progress = game.getWordProgress();
+        this.isWon = game.isWon();
         this.rounds = game.getRounds().stream().map(RoundDTO::new).collect(Collectors.toList());
     }
 
@@ -33,5 +35,9 @@ public class GameStateDTO {
 
     public String getProgress() {
         return progress;
+    }
+
+    public boolean isWon() {
+        return isWon;
     }
 }

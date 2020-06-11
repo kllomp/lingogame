@@ -1,5 +1,7 @@
 package com.lingo.lingogame.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -10,8 +12,11 @@ import java.util.function.Predicate;
 @Entity
 public class Word {
 
+    @JsonIgnore
     private static final int MIN_LENGTH = 5;
+    @JsonIgnore
     private static final int MAX_LENGTH = 7;
+    @JsonIgnore
     private static final String ALLOWED_REGEX = "[a-z]+\\.?";
 
     @Id
@@ -21,9 +26,11 @@ public class Word {
     private int length;
     private String language = "NL";
 
+    @JsonIgnore
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "correctWord")
     private Set<Game> games = new HashSet<>();
 
+    @JsonIgnore
     @Transient
     private final List<Predicate<Word>> validators = new LinkedList<>();
 
@@ -40,7 +47,8 @@ public class Word {
         initializeValidators();
     }
 
-    public Word() {}
+    public Word() {
+    }
 
     public String getWord() {
         return word;
@@ -63,12 +71,12 @@ public class Word {
         this.language = language;
     }
 
-    public boolean isValid() {
-        return validators.stream().allMatch(wordPredicate -> wordPredicate.test(this));
-    }
-
     public Set<Game> getGames() {
         return games;
+    }
+
+    public boolean isValid() {
+        return validators.stream().allMatch(wordPredicate -> wordPredicate.test(this));
     }
 
     private void initializeValidators() {
@@ -76,7 +84,7 @@ public class Word {
         this.validators.add(Word::isAllowedCharacters);
     }
 
-    private static boolean isBetweenAllowedLength(Word word){
+    private static boolean isBetweenAllowedLength(Word word) {
         return MIN_LENGTH <= word.getLength() && word.getLength() <= MAX_LENGTH;
     }
 

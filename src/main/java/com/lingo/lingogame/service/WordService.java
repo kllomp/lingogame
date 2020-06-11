@@ -26,8 +26,8 @@ public class WordService {
         return words.get(random.nextInt(words.size()));
     }
 
-    public void insertWords(List<Word> words) {
-        repository.saveAll(words);
+    public List<Word> insertWords(List<Word> words) {
+        return repository.saveAll(words);
     }
 
     public boolean isValidWord(String guessWord) {
